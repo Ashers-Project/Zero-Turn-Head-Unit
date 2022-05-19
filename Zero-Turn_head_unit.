@@ -1,0 +1,438 @@
+import datetime
+import threading
+import time
+from tkinter import *
+from matplotlib import pyplot as plt
+from datetime import *
+from PIL import Image, ImageTk
+import cv2
+import serial
+import time
+import tk_tools
+import customtkinter
+import cv2
+from datetime import datetime
+today = date.today()
+counter = 1652202000
+timetostop = 0
+d2 = today.strftime("%B %d, %Y")
+# label.grid(row=0, column=0)
+def splash_screen1():
+    seral.start()
+    def afterall():
+        root.destroy()
+        mainn.start()
+        mainn.join()
+
+    customtkinter.set_default_color_theme("blue")
+    customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
+
+    root = customtkinter.CTk()
+    root.geometry("1024x600")
+    root.overrideredirect("true")
+    videoplayer = Label(root)
+    videoplayer.pack(pady=60, anchor="center")
+    looped_video = cv2.VideoCapture('FlexClip.mp4')
+
+    def asd():
+        # Get the latest frame and convert into Image
+
+        ret, f3 = looped_video.read()
+        """width = looped_video.get(cv2.CAP_PROP_FRAME_WIDTH)
+        print(width)
+        height  =  looped_video.get(cv2.CAP_PROP_FRAME_HEIGHT)
+        print(height)"""
+
+        f3 = cv2.resize(f3, (400, 225))
+        # cv2.copyMakeBorder(f3, top=2, bottom=2, left=20, right=2, borderType=cv2.BORDER_CONSTANT)
+
+        cv2image = cv2.cvtColor(f3, cv2.COLOR_BGR2RGB)
+
+        img = Image.fromarray(cv2image)
+        # Convert image to PhotoImage
+        imggtk = ImageTk.PhotoImage(image=img)
+        videoplayer.imggtk = imggtk
+        videoplayer.configure(image=imggtk, borderwidth=0)
+        # Repeat after an interval to capture continiously
+        videoplayer.after(1, asd)
+
+    asd()
+
+    fgf = 0.2
+
+    def addingprogress1():
+        progress.set(0.2 + 0.2)
+
+        progress.set(0.6)
+
+        root.after(1000, progress.set(0.8))
+
+        progress.set(1)
+
+
+        root.after(2000, afterall)
+
+    printloading = customtkinter.CTkLabel(root, text="Loading Sensor Data").pack(pady=80)
+
+    progress = customtkinter.CTkProgressBar(root)
+    progress.pack()
+    progress.set(value=0.2)
+
+    progress.after(2000, addingprogress1)
+
+    root.mainloop()
+
+def seralread():
+    global shshshshsh
+    sere = serial.Serial('COM4', 9600, timeout=1)
+    while True:
+        serer = sere.readline()
+        serere = serer.decode("utf-8")
+        sererere = serere.rstrip()
+        shshshshsh = sererere
+        print(sererere)
+
+def main():
+    cap = cv2.VideoCapture(0)
+
+    def eng():
+
+
+
+        global root
+        customtkinter.set_default_color_theme("blue")
+        customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
+        root = customtkinter.CTk()
+        root.geometry("1024x600")
+        root.title("Engine Data")
+        Date = customtkinter.CTkLabel(root, text=d2 ,text_font="14")
+        Date.place(anchor="nw")
+
+        framefordata = customtkinter.CTkFrame(root, width=20, height=400, border_color="white", borderwidth=1)
+        framefordata.pack(anchor="center", pady=140)
+
+        seralnumberofengine = customtkinter.CTkLabel(framefordata, text="Seral Number Of Motor" + "\n" + "0807146G07689", text_font=("Arial", 10)).pack(pady=3)
+        Enginemodel = customtkinter.CTkLabel(framefordata, text="Model Of Engine" + "\n " + "44K777", text_font=("Arial", 10)).pack(pady=3)
+        Enginetype = customtkinter.CTkLabel(framefordata, text="Type Code Of Engine" + "\n" "0125 G1", text_font=("Arial", 10)).pack(pady=3)
+        EngineCode = customtkinter.CTkLabel(framefordata, text="Code Of Engine" + "\n" + "080714YG", text_font=("Arial", 10)).pack(pady=3)
+        EngineBuildDate = customtkinter.CTkLabel(framefordata, text="Engine Build Date" + "\n" + "July, 2008", text_font=("Arial", 10)).pack(pady=3)
+        EngineHp = customtkinter.CTkLabel(framefordata, text="HorsePower Of Engine" + "\n" + "22.0 Gross HP", text_font=("Arial", 10)).pack(pady=3)
+        EngineSeries = customtkinter.CTkLabel(framefordata, text="Engine Series" + "\n" + "Extended Life Series : Briggs & Stratton", text_font=("Arial", 10)).pack(pady=3)
+
+
+
+
+
+
+        # engineinfo = Button(root, text="Engine", command=eng).grid(row=5, column=5)
+        def setting_temp_value():
+            #t.set_value(shshshshsh)
+            t.set_value(1)
+            t.after(1, setting_temp_value)
+
+        t = tk_tools.Gauge(root, min_value=1, max_value=257, label="ENGINE TEMP", unit="℉", bg="#2e2e2e", divisions=20, width=365, height=182.5)
+        t.place(anchor="nw", y=40)
+        setting_temp_value()
+
+        rp = tk_tools.Gauge(root, min_value=1, max_value=3600, label="RPM", unit="REV Per Min", bg="#2e2e2e", divisions=20, width=365, height=182.5)
+        rp.place(x=654, y=40)
+
+        speed = tk_tools.Gauge(root, min_value=1, max_value=8, label="Speed", unit="MPH", bg="#2e2e2e", divisions=10, width=365, height=182.5)
+        speed.place(x=654, y=315)
+
+        batterv = tk_tools.Gauge(root, min_value=1, max_value=257, label="Battery Voltage", unit="V", bg="#2e2e2e", divisions=20, width=365, height=182.5)
+        batterv.place(anchor="sw", y=500)
+
+
+        def mow1():
+            root.destroy()
+            mow()
+
+        def ser1():
+            root.destroy()
+            ser()
+
+        def Camera1():
+            root.destroy()
+            Camera()
+
+        def setting1():
+            root.destroy()
+            setting()
+
+        Mowerinfo = Button(root, text="Mower", command=mow1,width=30, height=4, bg="#1c94cf").place(x=700, y=520)
+        Serviceinfo = Button(root, text="Service", command=ser1, width=30, height=4, bg="#1c94cf").place(x=500, y=520)
+        camerainfo = Button(root, text="Camera", command=Camera1, width=30, height=4, bg="#1c94cf").place(x=300, y=520)
+        settinginfo = Button(root, text="Settings", command=setting1, width=30, height=4, bg="#1c94cf").place(x=100, y=520)
+
+        root.mainloop()
+
+    def mow():
+        counter = 1652202000
+        timetostop = 0
+
+        def savetimmer():
+
+            lasttimeout = open("stopwatch.txt", "w")
+            lasttimeout.write(stopwatch.cget("text"))
+            lasttimeout.close()
+            stopwatch.configure(text="00:00")
+
+        def start():
+            global running
+
+            running = True
+
+            if running:
+                pass
+            else:
+                running = True
+                counter = 1652202000
+
+            if running:
+                def count():
+                    if running:
+                        global counter
+
+                        # To manage the initial delay.
+                        if counter == 66600:
+                            display = "Starting..."
+
+                        else:
+                            tt = datetime.fromtimestamp(counter)
+                            string = tt.strftime("%M:%S")
+                            display = string
+
+                        stopwatch.configure(text=display)
+
+                        # label.after(arg1, arg2) delays by
+                        # first argument given in milliseconds
+                        # and then calls the function given as second argument.
+                        # Generally like here we need to call the
+                        # function in which it is present repeatedly.
+                        # Delays by 1000ms=1 seconds and call count again.
+                        stopwatch.after(1000, count)
+                        counter += 1
+
+                # Triggering the start of the counter.
+                count()
+
+        def end():
+            global running
+            if True:
+                running = False
+        def lastcutdateinfo():
+            file = open("last_Cut_Date.txt", "r")
+            content = file.read()
+            lastcut.configure(text=content.rstrip("\n"))
+
+
+        def getlastcutheight():
+            file = open("last_cut_height.txt", "r")
+            contents = file.readline()
+            print(contents.rstrip("\n"))
+            cutheight.configure(text=contents.rstrip("\n"))
+
+
+        global mowpage
+
+        customtkinter.set_default_color_theme("blue")
+        customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
+        mowpage = customtkinter.CTk()
+        mowpage.geometry("1024x600")
+        mowpage.title("Mower Data")
+
+        global stopwatch
+
+        frame1 = customtkinter.CTkFrame(mowpage, borderwidth=1, border_color="white")
+        frame1.configure(height=500, width=350)
+        frame1.place(x=10)
+
+        labelfrolastcut = customtkinter.CTkLabel(frame1, text="Last Cut Height", text_font=("arial",17))
+        labelfrolastcut.place(x=80, y=30)
+
+        cutheight = customtkinter.CTkLabel(frame1, text_font=("arial", 20))
+        cutheight.place(x=80, y=80)
+
+        getlastcutheight()
+
+        lastcutdate = customtkinter.CTkLabel(frame1, text="Last Cut Date", text_font=("arial", 17))
+        lastcutdate.place(x=80, y=130)
+
+        lastcut = customtkinter.CTkLabel(frame1, text_font=("arial", 20))
+        lastcut.place(x=80, y=180)
+
+        lastcutdateinfo()
+
+        button_to_set_date = customtkinter.CTkButton(frame1, text="Cut Today", text_font=("arial", 14))
+        button_to_set_date.place(x=80, y=230)
+
+        lastdeckwash = customtkinter.CTkLabel(frame1, text="Last Deck Wash", text_font=("arial", 17))
+
+        lastdeckwash.place(x=80, y=280)
+
+
+
+
+        frame2 = customtkinter.CTkFrame(mowpage, borderwidth=1, border_color="white", height=500, width=350)
+        frame2.place(x=665)
+        LABLE1 = customtkinter.CTkLabel(mowpage, text="Timmer For Cut", text_font=("arial", 17)).pack(anchor="n",
+                                                                                                      pady=20)
+        frame3 = customtkinter.CTkFrame(mowpage, borderwidth=1, border_color="light blue", width=260, height=100)
+        frame3.place(x=380, y=60)
+        stopwatch = Label(frame3, font=("arial", 30), width=5, height=2, background="#1f1f1f", foreground="white",
+                          borderwidth="4", bg="#1f1f1f")
+        stopwatch.configure(text="00:00")
+        stopwatch.pack(padx=60)
+        startbutton = customtkinter.CTkButton(mowpage, text="Start Cut", width=40, height=30, text_font=("arial", 16),
+                                              command=start).place(y=187, x=390)
+        stopbutton = customtkinter.CTkButton(mowpage, text_font=("arial", 16), text="Finished Cut", command=end).place(
+            y=187, x=520)
+        savebutton = customtkinter.CTkButton(mowpage, text="Save Data", text_font=("arial", 16),
+                                             command=savetimmer).place(y=220, x=450)
+
+        def eng1():
+            mowpage.destroy()
+            eng()
+
+        def ser1():
+            mowpage.destroy()
+            ser()
+
+        def Camera1():
+            mowpage.destroy()
+            Camera()
+
+        def setting1():
+            mowpage.destroy()
+            setting()
+
+        engineinfo = Button(mowpage, text="Engine", command=eng1, width=30, height=4, bg="#1c94cf").place(x=700, y=520)
+        Serviceinfo = Button(mowpage, text="Service", command=ser1, width=30, height=4, bg="#1c94cf").place(x=500,
+                                                                                                            y=520)
+        camerainfo = Button(mowpage, text="Camera", command=Camera1, width=30, height=4, bg="#1c94cf").place(x=300,
+                                                                                                             y=520)
+        settinginfo = Button(mowpage, text="Settings", command=setting1, width=30, height=4, bg="#1c94cf").place(x=100,
+                                                                                                                 y=520)
+
+        mowpage.mainloop()
+
+    def ser():
+        global servicepage
+        customtkinter.set_default_color_theme("blue")
+        customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
+        servicepage = customtkinter.CTk()
+        servicepage.geometry("1024x600")
+        servicepage.title("Service Date")
+
+        def eng1():
+            servicepage.destroy()
+            eng()
+
+        def Camera1():
+            servicepage.destroy()
+            Camera()
+
+        def setting1():
+            servicepage.destroy()
+            setting()
+
+        def mow1():
+            servicepage.destroy()
+            mow()
+
+        engineinfo = Button(servicepage, text="Engine", command=eng1, width=30, height=4, bg="#1c94cf").place(x=700, y=520)
+        camerainfo = Button(servicepage, text="Camera", command=Camera1, width=30, height=4, bg="#1c94cf").place(x=300, y=520)
+        settinginfo = Button(servicepage, text="Settings", command=setting1, width=30, height=4, bg="#1c94cf").place(x=100, y=520)
+        Mowerinfo = Button(servicepage, text="Mower", command=mow1, width=30, height=4, bg="#1c94cf").place(x=500, y=520)
+
+        servicepage.mainloop()
+
+    def Camera():
+        global campage
+        customtkinter.set_default_color_theme("blue")
+        customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
+        campage = customtkinter.CTk()
+        campage.geometry("1024x600")
+        campage.title("Camera")
+        label = Label(campage)
+        label.pack()
+
+        def frames():
+            # Get the latest frame and convert into Image
+            cv2image = cv2.cvtColor(cap.read()[1], cv2.COLOR_BGR2RGB)
+            img = Image.fromarray(cv2image)
+            # Convert image to PhotoImage
+            imggtk = ImageTk.PhotoImage(image=img)
+            label.imggtk = imggtk
+            label.configure(image=imggtk)
+            # Repeat after an interval to capture continiously
+            label.after(1, frames)
+
+        frames()
+
+        def mow1():
+            campage.destroy()
+            mow()
+
+        def ser1():
+            campage.destroy()
+            ser()
+
+        def setting1():
+            campage.destroy()
+            setting()
+
+        def eng1():
+            campage.destroy()
+            eng()
+
+        Mowerinfo = Button(campage, text="Mower", command=mow1, width=30, height=4, bg="#1c94cf").place(x=700, y=520)
+        Serviceinfo = Button(campage, text="Service", command=ser1, width=30, height=4, bg="#1c94cf").place(x=500, y=520)
+        settinginfo = Button(campage, text="Settings", command=setting1, width=30, height=4, bg="#1c94cf").place(x=100, y=520)
+        engineinfo = Button(campage, text="Engine", command=eng1, width=30, height=4, bg="#1c94cf").place(x=300, y=520)
+
+        campage.mainloop()
+
+    def setting():
+        global settingpage
+        customtkinter.set_default_color_theme("blue")
+        customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
+        settingpage = customtkinter.CTk()
+        settingpage.geometry("1024x600")
+        settingpage.title("Settings")
+
+        def mow1():
+            settingpage.destroy()
+            mow()
+
+        def ser1():
+            settingpage.destroy()
+            ser()
+
+        def Camera1():
+            settingpage.destroy()
+            Camera()
+
+        def eng1():
+            settingpage.destroy()
+            eng()
+
+        Mowerinfo = Button(settingpage, text="Mower", command=mow1, width=30, height=4, bg="#1c94cf").place(x=700, y=520)
+        Serviceinfo = Button(settingpage, text="Service", command=ser1, width=30, height=4, bg="#1c94cf").place(x=500, y=520)
+        camerainfo = Button(settingpage, text="Camera", command=Camera1, width=30, height=4, bg="#1c94cf").place(x=100, y=520)
+        engineinfo = Button(settingpage, text="Engine", command=eng1, width=30, height=4, bg="#1c94cf").place(x=300, y=520)
+
+        settingpage.mainloop()
+
+    # main frame window
+
+    # Define function to start on
+    eng()
+
+
+# initalise thread for reading seral data
+seral = threading.Thread(target=seralread)
+mainn = threading.Thread(target=main)
+
+splash_screen1()
