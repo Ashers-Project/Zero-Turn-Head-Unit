@@ -1,28 +1,59 @@
 import datetime
 import threading
-import time
 from tkinter import *
 from matplotlib import pyplot as plt
 from datetime import *
 from PIL import Image, ImageTk
-import cv2
 import serial
-import time
 import tk_tools
 import customtkinter
 import cv2
 from datetime import datetime
+import asyncio
+from aiohttp import ClientSession
+import pymyq
+
+
+
 today = date.today()
 counter = 1652202000
 timetostop = 0
 d2 = today.strftime("%B %d, %Y")
 # label.grid(row=0, column=0)
+
+def open1():
+    async def main() -> None:
+        """Create the aiohttp session and run."""
+        async with ClientSession() as websession:
+            myq = await pymyq.login('ashermalik927@gmail.com', 'Awm1123567', websession)
+
+            for idx, device in enumerate(myq.covers.values()):
+
+
+                if device.name == "Mower":
+                    await device.open()
+
+    asyncio.get_event_loop().run_until_complete(main())
+
+def close():
+    async def main() -> None:
+        """Create the aiohttp session and run."""
+        async with ClientSession() as websession:
+            myq = await pymyq.login('ashermalik927@gmail.com', 'Awm1123567', websession)
+
+            for idx, device in enumerate(myq.covers.values()):
+
+
+                if device.name == "Mower":
+                    await device.close()
+
+    asyncio.get_event_loop().run_until_complete(main())
+
 def splash_screen1():
     seral.start()
     def afterall():
         root.destroy()
-        mainn.start()
-        mainn.join()
+        main()
 
     customtkinter.set_default_color_theme("blue")
     customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
@@ -108,6 +139,16 @@ def main():
         Date = customtkinter.CTkLabel(root, text=d2 ,text_font="14")
         Date.place(anchor="nw")
 
+
+
+
+
+        garagedoor = customtkinter.CTkLabel(root, text="Garage Door Opener", text_font=("arial", 19)).place(anchor="n", x=520)
+        openbutton = customtkinter.CTkButton(root, text="Open", text_font=("arial", 19), command=open1).place(anchor="n", x=570, y=50)
+        closebutton = customtkinter.CTkButton(root, text="Close", text_font=("arial", 19), command=close).place(anchor="n", x=450, y=50)
+
+
+
         framefordata = customtkinter.CTkFrame(root, width=20, height=400, border_color="white", borderwidth=1)
         framefordata.pack(anchor="center", pady=140)
 
@@ -173,10 +214,15 @@ def main():
 
         def savetimmer():
 
-            lasttimeout = open("stopwatch.txt", "w")
-            lasttimeout.write(stopwatch.cget("text"))
-            lasttimeout.close()
-            stopwatch.configure(text="00:00")
+            if stopwatch.cget("text") == "00:00":
+                pass
+            else:
+
+
+                lasttimeout = open("stopwatch.txt", "w")
+                lasttimeout.write(stopwatch.cget("text"))
+                lasttimeout.close()
+                stopwatch.configure(text="00:00")
 
         def start():
             global running
@@ -196,8 +242,7 @@ def main():
 
                         # To manage the initial delay.
                         if counter == 66600:
-                            display = "Starting..."
-
+                            pass
                         else:
                             tt = datetime.fromtimestamp(counter)
                             string = tt.strftime("%M:%S")
@@ -221,11 +266,76 @@ def main():
             global running
             if True:
                 running = False
+
+        def cuttoday():
+
+            file = open("last_Cut_Date.txt", "w")
+            file.write(d2)
+            file.close()
+            lastcut.configure(text=d2)
+
         def lastcutdateinfo():
             file = open("last_Cut_Date.txt", "r")
             content = file.read()
             lastcut.configure(text=content.rstrip("\n"))
+        def setheightwindow():
+            window = customtkinter.CTk()
+            def b1cmd():
+                cutheight.configure(text="2.00")
+                file = open("last_cut_height.txt", "w")
+                file.write("2.00")
+                file.close()
+                window.destroy()
+            def b2cmd():
+                cutheight.configure(text="2.50")
+                file = open("last_cut_height.txt", "w")
+                file.write("2.50")
+                file.close()
+                window.destroy()
+            def b3cmd():
+                cutheight.configure(text="3.00")
+                file = open("last_cut_height.txt", "w")
+                file.write("3.00")
+                file.close()
+                window.destroy()
+            def b4cmd():
+                cutheight.configure(text="3.50")
+                file = open("last_cut_height.txt", "w")
+                file.write("3.50")
+                file.close()
+                window.destroy()
+            def b5cmd():
+                cutheight.configure(text="4.00")
+                file = open("last_cut_height.txt", "w")
+                file.write("4.00")
+                file.close()
+                window.destroy()
+            def b6cmd():
+                cutheight.configure(text="4.50")
+                file = open("last_cut_height.txt", "w")
+                file.write("4.50")
+                file.close()
+                window.destroy()
 
+
+
+
+            lable = customtkinter.CTkLabel(window, text="Click Height Of Cut To Set")
+            b1 = customtkinter.CTkButton(window, text_font=("arial", 15), text="2.00", command=b1cmd)
+            b1.pack(pady=5)
+            b2 = customtkinter.CTkButton(window, text_font=("arial", 15), text="2.50", command=b2cmd)
+            b2.pack(pady=5)
+            b3 = customtkinter.CTkButton(window, text_font=("arial", 15), text="3.00", command=b3cmd)
+            b3.pack(pady=5)
+            b4 = customtkinter.CTkButton(window, text_font=("arial", 15), text="3.50", command=b4cmd)
+            b4.pack(pady=5)
+            b5 = customtkinter.CTkButton(window, text_font=("arial", 15), text="4.00", command=b5cmd)
+            b5.pack(pady=5)
+            b6 = customtkinter.CTkButton(window, text_font=("arial", 15), text="4.50", command=b6cmd)
+            b6.pack(pady=5)
+
+
+            window.mainloop()
 
         def getlastcutheight():
             file = open("last_cut_height.txt", "r")
@@ -233,8 +343,21 @@ def main():
             print(contents.rstrip("\n"))
             cutheight.configure(text=contents.rstrip("\n"))
 
+        def getwashdate():
+            file = open("washdate.txt", "r")
+            content = file.read()
+            washdate.configure(text=content)
 
+            file.close()
+
+        def washed():
+            file = open("washdate.txt", "w")
+            file.write(d2)
+            washdate.configure(text=d2)
+
+        global cutheight
         global mowpage
+        global washdate
 
         customtkinter.set_default_color_theme("blue")
         customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
@@ -243,41 +366,110 @@ def main():
         mowpage.title("Mower Data")
 
         global stopwatch
+        global cutheight
 
         frame1 = customtkinter.CTkFrame(mowpage, borderwidth=1, border_color="white")
         frame1.configure(height=500, width=350)
         frame1.place(x=10)
 
+        frameinfo = customtkinter.CTkFrame(mowpage, borderwidth=1, border_color="white")
+        frameinfo.configure(width=200, height=250)
+        frameinfo.place(x=415, y=270)
+
+        partnumber = customtkinter.CTkLabel(frameinfo, text="Blade Part Number", text_font=("arial", 17)).pack(pady=7)
+        number = customtkinter.CTkLabel(frameinfo, text="103-6391", text_font=("arial", 16)).pack(pady=7)
+
+        bladesize = customtkinter.CTkLabel(frameinfo, text="Each Blade Size",text_font=("arial", 17)).pack(pady=7)
+        size = customtkinter.CTkLabel(frameinfo, text="16 1/4 Inches", text_font=("arial", 16)).pack(pady=7)
+
+        totaldecksize = customtkinter.CTkLabel(frameinfo, text_font=("arial", 17), text="Deck Length").pack(pady=7)
+        size1 = customtkinter.CTkLabel(frameinfo, text_font=("arial", 16), text="48 Inches").pack(pady=7)
+
+
         labelfrolastcut = customtkinter.CTkLabel(frame1, text="Last Cut Height", text_font=("arial",17))
         labelfrolastcut.place(x=80, y=30)
 
         cutheight = customtkinter.CTkLabel(frame1, text_font=("arial", 20))
-        cutheight.place(x=80, y=80)
+        cutheight.place(x=30, y=80)
 
         getlastcutheight()
+
+        Setcutheight = customtkinter.CTkButton(frame1, text="Set Height", text_font=("arial", 17), command=setheightwindow)
+        Setcutheight.place(x=170, y=80)
 
         lastcutdate = customtkinter.CTkLabel(frame1, text="Last Cut Date", text_font=("arial", 17))
         lastcutdate.place(x=80, y=130)
 
         lastcut = customtkinter.CTkLabel(frame1, text_font=("arial", 20))
-        lastcut.place(x=80, y=180)
+        lastcut.place(x=50, y=180)
 
         lastcutdateinfo()
 
-        button_to_set_date = customtkinter.CTkButton(frame1, text="Cut Today", text_font=("arial", 14))
+        button_to_set_date = customtkinter.CTkButton(frame1, text="Cut Today", text_font=("arial", 14), command=cuttoday)
         button_to_set_date.place(x=80, y=230)
 
         lastdeckwash = customtkinter.CTkLabel(frame1, text="Last Deck Wash", text_font=("arial", 17))
 
-        lastdeckwash.place(x=80, y=280)
+        lastdeckwash.place(x=70, y=280)
+
+        washdate = customtkinter.CTkLabel(frame1, text_font=("arial", 20))
+        washdate.place(x=50, y=320)
+
+        getwashdate()
+
+        washedtoday = customtkinter.CTkButton(frame1, text="Washed Today", text_font=("arial", 14), command=washed)
+        washedtoday.place(x=80, y=370)
 
 
+        def sharpened():
+            file = open("sharpened.txt", "w")
+            file.write(d2)
+            file.close()
 
+            l4.configure(text=d2)
+
+        def lastsharpening():
+            file = open("sharpened.txt", "r")
+            content = file.read()
+            file.close()
+            l4.configure(text=content)
+
+        def lasttimeout():
+            file = open("stopwatch.txt", "r")
+            content = file.read()
+            file.close()
+
+            l6.configure(text=content)
 
         frame2 = customtkinter.CTkFrame(mowpage, borderwidth=1, border_color="white", height=500, width=350)
         frame2.place(x=665)
-        LABLE1 = customtkinter.CTkLabel(mowpage, text="Timmer For Cut", text_font=("arial", 17)).pack(anchor="n",
-                                                                                                      pady=20)
+
+        L1 = customtkinter.CTkLabel(frame2, text="Load On Engine", text_font=("arial",17)).place(y=30, x=80)
+        l2 = customtkinter.CTkLabel(frame2, text="Feature Coming Soon!!!", text_font=("arial", 16)).place(x=80, y=80)
+
+        l3 = customtkinter.CTkLabel(frame2, text_font=("arial", 17), text="Last Blade Sharpening").place(x=80, y=140)
+        l4 = customtkinter.CTkLabel(frame2, text_font=("arial", 16))
+        l4.place(x=80, y=190)
+
+        lastsharpening()
+
+        b1 = customtkinter.CTkButton(frame2, text="Sharpened Today", text_font=("arial", 16), command=sharpened)
+        b1.place(x=80, y=235)
+
+        l5 = customtkinter.CTkLabel(frame2, text="Last Cut Timeout", text_font=("arial", 17))
+        l5.place(x=80, y=280)
+
+        l6 = customtkinter.CTkLabel(frame2, text_font=("arial", 20))
+        l6.place(x=80, y=320)
+
+        lasttimeout()
+
+
+
+
+
+
+        LABLE1 = customtkinter.CTkLabel(mowpage, text="Timmer For Cut", text_font=("arial", 17)).pack(anchor="n",pady=20)
         frame3 = customtkinter.CTkFrame(mowpage, borderwidth=1, border_color="light blue", width=260, height=100)
         frame3.place(x=380, y=60)
         stopwatch = Label(frame3, font=("arial", 30), width=5, height=2, background="#1f1f1f", foreground="white",
@@ -325,6 +517,119 @@ def main():
         servicepage.geometry("1024x600")
         servicepage.title("Service Date")
 
+        def setdateofservice():
+            file = open("lastservicedate.txt", "r")
+            content = file.read()
+            file.close()
+            dateservice.configure(text=content)
+
+        def serviced():
+            file = open("lastservicedate.txt", "w")
+            content = file.write(d2)
+            file.close()
+            dateservice.configure(text=d2)
+
+        def getlist():
+            def closewindow():
+                r1.destroy()
+
+            r1 = customtkinter.CTk()
+            r1.title("Service List")
+            l1 = customtkinter.CTkLabel(r1, text="- Chect Air Filter", text_font=("arial", 17)).pack(pady=30)
+            l2 = customtkinter.CTkLabel(r1, text="- Check Spark Plug Gap", text_font=("arial", 17)).pack(pady=30)
+            l3 = customtkinter.CTkLabel(r1, text="- Check Valve Clearence", text_font=("arial", 17)).pack(pady=30)
+            l4 = customtkinter.CTkLabel(r1, text="- Check Armature Gap", text_font=("arial", 17)).pack(pady=30)
+            l5 = customtkinter.CTkLabel(r1, text="- Clean Engine", text_font=("arial", 17)).pack(pady=30)
+            b1 = customtkinter.CTkButton(r1, text="close", command=closewindow).pack(pady=30)
+
+            r1.mainloop()
+
+        Date = customtkinter.CTkLabel(servicepage, text="May 21, 2022", text_font=("arial", 17))
+
+        Date.place(anchor="nw")
+
+        global dateservice
+
+        frame1 = customtkinter.CTkFrame(servicepage, width=472, height=460)
+        frame1.place(x=12, y=30)
+
+        engine = customtkinter.CTkLabel(frame1, text="Engine Service", text_font=("arial", 25)).place(x=120, y=25)
+
+        lsd = customtkinter.CTkLabel(frame1, text="Last Service Date : ", text_font=("arial", 20)).place(x=80, y=80)
+        dateservice = customtkinter.CTkLabel(frame1, text_font=("arial", 17))
+        dateservice.place(x=50, y=120)
+        buttontoservicedtoday = customtkinter.CTkButton(frame1, text="Serviced Today", text_font=("arial", 16),
+                                                        command=serviced).place(y=120, x=240)
+
+        setdateofservice()
+
+        spec = customtkinter.CTkLabel(frame1, text="Specifications:", text_font=("arial", 20)).place(x=40, y=165)
+        sparkplug = customtkinter.CTkLabel(frame1, text="- Spark Plug Gap = 0.030", text_font=("arial", 16)).place(x=45,
+                                                                                                                   y=210)
+        exaust = customtkinter.CTkLabel(frame1, text="- Exaust valve Gap = 0.005", text_font=("arial", 16)).place(x=45,
+                                                                                                                  y=245)
+        intake = customtkinter.CTkLabel(frame1, text="- Intake valve Gap = 0.005", text_font=("arial", 16)).place(x=45,
+                                                                                                                  y=275)
+        magneto = customtkinter.CTkLabel(frame1, text="- Armature Gap = 0.010", text_font=("arial", 16)).place(x=45,
+                                                                                                               y=305)
+        getservicelist = customtkinter.CTkButton(frame1, text="Get Service List", command=getlist,
+                                                 text_font=("arial", 20)).place(x=100, y=400)
+
+        def servicemowertoday():
+            fill = open("mowerservice.txt", "w")
+            fill.write(d2)
+            fill.close()
+            mowerservicedate.configure(text=d2)
+
+        def setlable():
+            file = open("mowerservice.txt", "r")
+            content = file.read()
+            file.close()
+
+            mowerservicedate.configure(text=content)
+
+        def mowerservicelist():
+            mowerservice = customtkinter.CTk()
+
+            def closewindoww():
+                mowerservice.destroy()
+
+            ll = customtkinter.CTkLabel(mowerservice, text="Clean Deck", text_font=("arial", 17)).pack(pady=30)
+            af = customtkinter.CTkLabel(mowerservice, text="Check Belt", text_font=("arial", 17)).pack(pady=30)
+            fg = customtkinter.CTkLabel(mowerservice, text="Check Blades", text_font=("arial", 17)).pack(pady=30)
+            hj = customtkinter.CTkLabel(mowerservice, text="Check Spindles", text_font=("arial", 17)).pack(pady=30)
+
+            b76 = customtkinter.CTkButton(mowerservice, text="close", command=closewindoww).pack(pady=30)
+
+            mowerservice.mainloop()
+
+        frame2 = customtkinter.CTkFrame(servicepage, width=472, height=460)
+        frame2.place(x=540, y=30)
+
+        mower = customtkinter.CTkLabel(frame2, text_font=("arial", 25), text="Mower Service").place(y=25, x=140)
+
+        lastservicemower = customtkinter.CTkLabel(frame2, text="Last Mower Service : ", text_font=("arial", 20)).place(
+            y=80, x=100)
+        mowerservicedate = customtkinter.CTkLabel(frame2, text_font=("arial", 17))
+        mowerservicedate.place(y=125, x=60)
+        setlable()
+        setdateofmowerservice = customtkinter.CTkButton(frame2, text_font=("arial", 16), text="Serviced Today",
+                                                        command=servicemowertoday)
+        setdateofmowerservice.place(y=125, x=250)
+
+        specificaiono = customtkinter.CTkLabel(frame2, text="Specifications:", text_font=("arial", 20))
+        specificaiono.place(y=165, x=50)
+
+        l11 = customtkinter.CTkLabel(frame2, text="Blade Pant # = 103-6391", text_font=("arial", 16)).place(x=45, y=210)
+        l22 = customtkinter.CTkLabel(frame2, text="Blade Size = 16.25", text_font=("arial", 16)).place(x=45, y=245)
+        l33 = customtkinter.CTkLabel(frame2, text="Spindle Part # = 109-6917", text_font=("arial", 16)).place(x=45,
+                                                                                                              y=275)
+        l44 = customtkinter.CTkLabel(frame2, text="Belt Part # = 109-5364", text_font=("arial", 16)).place(x=45, y=309)
+
+        b55 = customtkinter.CTkButton(frame2, text_font=("arial", 20), text="Get Service List",
+                                      command=mowerservicelist)
+        b55.place(x=100, y=400)
+
         def eng1():
             servicepage.destroy()
             eng()
@@ -341,10 +646,14 @@ def main():
             servicepage.destroy()
             mow()
 
-        engineinfo = Button(servicepage, text="Engine", command=eng1, width=30, height=4, bg="#1c94cf").place(x=700, y=520)
-        camerainfo = Button(servicepage, text="Camera", command=Camera1, width=30, height=4, bg="#1c94cf").place(x=300, y=520)
-        settinginfo = Button(servicepage, text="Settings", command=setting1, width=30, height=4, bg="#1c94cf").place(x=100, y=520)
-        Mowerinfo = Button(servicepage, text="Mower", command=mow1, width=30, height=4, bg="#1c94cf").place(x=500, y=520)
+        engineinfo = Button(servicepage, text="Engine", command=eng1, width=30, height=4, bg="#1c94cf").place(x=700,
+                                                                                                              y=520)
+        camerainfo = Button(servicepage, text="Camera", command=Camera1, width=30, height=4, bg="#1c94cf").place(x=300,
+                                                                                                                 y=520)
+        settinginfo = Button(servicepage, text="Settings", command=setting1, width=30, height=4, bg="#1c94cf").place(
+            x=100, y=520)
+        Mowerinfo = Button(servicepage, text="Mower", command=mow1, width=30, height=4, bg="#1c94cf").place(x=500,
+                                                                                                            y=520)
 
         servicepage.mainloop()
 
@@ -418,6 +727,12 @@ def main():
             settingpage.destroy()
             eng()
 
+
+
+
+
+        l1 = customtkinter.CTkLabel(settingpage, text="Setting's Coming Soon!!!", text_font=("Arial", 30)).pack(anchor='center', pady=100)
+
         Mowerinfo = Button(settingpage, text="Mower", command=mow1, width=30, height=4, bg="#1c94cf").place(x=700, y=520)
         Serviceinfo = Button(settingpage, text="Service", command=ser1, width=30, height=4, bg="#1c94cf").place(x=500, y=520)
         camerainfo = Button(settingpage, text="Camera", command=Camera1, width=30, height=4, bg="#1c94cf").place(x=100, y=520)
@@ -433,6 +748,6 @@ def main():
 
 # initalise thread for reading seral data
 seral = threading.Thread(target=seralread)
-mainn = threading.Thread(target=main)
+
 
 splash_screen1()
